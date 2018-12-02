@@ -1,0 +1,30 @@
+{
+  "name": "thepiedpiper",
+  "version": "1.0.0",
+  "description": "A simple express server that communicates events to the client with Socket.io. ",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdiBakija/thePiedPiper.git"
+  },
+  "keywords": [
+    "JSON",
+    "Express",
+    "Socket.io"
+  ],
+  "author": "Adi Bakija",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdiBakija/thePiedPiper/issues"
+  },
+  "homepage": "https://github.com/AdiBakija/thePiedPiper#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mocha": "^5.2.0",
+    "socket.io": "^2.2.0"
+  }
+}
