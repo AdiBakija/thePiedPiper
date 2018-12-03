@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>The Pied Piper</title>
+</head>
+
+<body>
+  <!-- socket.io client setup -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io.connect('http://localhost');
+    socket.on('incoming_data', function (data) {
+      console.log(data);
+    });
+  </script>
+
+  <h1>The Pied Piper</h1>
+
+    <form id="submit-data">
+      <input id="data" type="text" name="jsondata" />
+      <input type="submit" name="submit" />
+    </form>
+
+</body>
+
+</html>
