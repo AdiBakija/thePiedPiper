@@ -9,7 +9,7 @@
   <!-- socket.io client setup -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io.connect('http://localhost');
+    const socket = io.connect('http://localhost:8080');
     socket.on('incoming_data', function (data) {
       console.log(data);
     });
@@ -17,7 +17,7 @@
 
   <h1>The Pied Piper</h1>
 
-    <form id="submit-data">
+    <form action="/" method="POST" id="submit-data">
       <input id="data" type="text" name="jsondata" />
       <input type="submit" name="submit" />
     </form>

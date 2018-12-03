@@ -2,16 +2,18 @@ const express           = require('express');
 const app               = express();
 const http              = require('http').Server(app);
 const io                = require('socket.io')(http);
+const bodyParser        = require("body-parser");
 const fs                = require('fs');
 
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
   res.sendFile('index.html')
 })
 
 app.post('/', (req, res) => {
-
+  console.log(req.body)
 })
 
 io.on('connection', (socket) => {
