@@ -10,17 +10,35 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io.connect('http://localhost:8080');
-    socket.on('incoming_data', function (data) {
-      console.log(data);
+    socket.on('INCOMING_DATA', (data) => {
+      const parsedData = JSON.parse(data);
+      console.log('Latest updates to JSON: ', parsedData);
+    });
+
+    socket.on('JSON_ERROR', (data) => {
+      console.log('Please specify correct JSON format');
     });
   </script>
 
   <h1>The Pied Piper</h1>
 
-    <form action="/" method="POST" id="submit-data">
+    <form id="submit-data">
       <input id="data" type="text" name="jsondata" />
       <input type="submit" name="submit" />
     </form>
+
+  <script>
+
+    window.onload = () => {
+      //Capture client input and send to socket server.
+      document.querySelector("#submit-data").onsubmit = (e) => {
+        e.preventDefault();
+        const jsonInput = document.querySelector('#data').value;
+        socket.emit('UPDATE_DATA', JSON.stringify(jsonInput));
+      }
+    };
+
+  </script>
 
 </body>
 
