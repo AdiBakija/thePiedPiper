@@ -5,39 +5,15 @@ const app               = express();
 const http              = require('http').Server(app);
 const io                = require('socket.io')(http);
 const fs                = require('fs');
+const datahelpers       = require('./utils/datahelpers.js');
 
 app.use(express.static('public'));
 
+//Simple client interface for capturing JSON and running queries.
 app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
 
-/*
-  ============
-  DATA HELPERS
-  ============
-*/
-
-//Helper function to validate JSON
-const IsJson = (data) => {
-    try {
-        JSON.parse(data);
-    } catch (e) {
-        return false;
-    }
-    return true;
-};
-
-//Helper function to serialize JSON.
-const serialize = (data) => {
-  return JSON.stringify(data, null, 2);
-};
-
-/*
-  =========
-  SOCKET.IO
-  =========
-*/
 
 io.on('connection', (socket) => {
   console.log('Client connected.');
@@ -48,9 +24,9 @@ io.on('connection', (socket) => {
   socket.on('UPDATE_DATA', (data) => {
 
     //Validate if JSON is valid or not
-    //let parsedData = JSON.parse(data);
-    let validateJson = IsJson(data);
+    let validateJson = datahelpers.isJson(data);
     if (validateJson) {
+      let parsedData = JSON.parse(data);
       io.to('update').emit('INCOMING_DATA', data);
 
       //Buffer of existing contents of JSON file.
@@ -59,9 +35,9 @@ io.on('connection', (socket) => {
         //Otherwise, create an empty array and add the data.
         if (content.length !== 0) {
           let buffer = JSON.parse(content);
-          buffer.push(data);
+          buffer.push(parsedData);
           //Write JSON data to file buffer.
-          fs.writeFile("./data.json", serialize(buffer), 'utf-8', (err) => {
+          fs.writeFile("./data.json", datahelpers.serialize(buffer), 'utf-8', (err) => {
               if (err) {
                   console.error(err);
                   return;
@@ -69,9 +45,10 @@ io.on('connection', (socket) => {
               console.log("File has been updated.");
           });
         } else {
+          //If file is empty, create JSON structure as array of objects.
           let json = [];
-          json.push(data);
-          fs.writeFileSync("./data.json", serialize(json), 'utf-8', (err) => {
+          json.push(parsedData);
+          fs.writeFile("./data.json", datahelpers.serialize(json), 'utf-8', (err) => {
               if (err) {
                   console.error(err);
                   return;
@@ -84,6 +61,7 @@ io.on('connection', (socket) => {
     } else {
       //Emit the data back if it's not valid JSON for client side handler
       //To log appropriate error message.
+      console.log('Incorrect JSON format specified.')
       io.to('update').emit('JSON_ERROR', data);
     }
 
@@ -97,9 +75,8 @@ io.on('connection', (socket) => {
         let buffer = JSON.parse(content);
         let result;
         buffer.forEach((obj) => {
-          let parsedObj = JSON.parse(obj);
-          if(parsedObj[key] != undefined) {
-            result = parsedObj[key];
+          if(obj[key] != undefined) {
+            result = obj[key];
           }
         });
       io.to('update').emit('QUERY_RESULT', result);
@@ -114,5 +91,7 @@ io.on('connection', (socket) => {
   });
 
 });
+
+console.log(datahelpers.serialize([{test: 'test'}]));
 
 exports.server = http.listen(8080);

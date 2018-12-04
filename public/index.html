@@ -20,7 +20,11 @@
     });
 
     socket.on('QUERY_RESULT', (data) => {
-      console.log(data);
+      if (data === null) {
+        console.log('No data was found, please try another query.')
+      } else {
+        console.log('Result of the query is: ', data);
+      }
     });
   </script>
 

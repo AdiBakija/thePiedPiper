@@ -1,46 +1,22 @@
-'use strict';
+var io = require('socket.io-client')
+  , assert = require('assert')
+  , expect = require('expect.js')
+  // , io_server = require('../server.js')
+  , datahelpers = require('../utils/datahelpers.js');
 
-const expect = require('chai').expect;
-const server = require('../server.js');
-const io = require('socket.io-client');
-const ioOptions = {
-      transports: ['websocket']
-    , forceNew: true
-    , reconnection: false
-  };
-const testMsg = 'HelloWorld';
-var sender;
-var receiver;
+describe('datahelpers', function() {
 
+  describe('#isJson()', function() {
+    it('should return true if valid JSON', function() {
+      expect(datahelpers.isJson('{"Key4": "Value4"}')).to.be.equal(true);
+    });
+  });
 
-
-describe('Socket Events', function(){
-  beforeEach(function(done){
-
-    // start the io server
-    server.start()
-    // connect two io clients
-    sender = io('http://localhost:8080/', ioOptions)
-    receiver = io('http://localhost:8080/', ioOptions)
-
-    // finish beforeEach setup
-    done()
-  })
-  afterEach(function(done){
-
-    // disconnect io clients after each test
-    sender.disconnect()
-    receiver.disconnect()
-    done()
-  })
-
-  describe('Update Events', function(){
-    it('Clients should receive a message when the `message` event is emited.', function(done){
-      sender.emit('message', testMsg)
-      receiver.on('message', function(msg){
-        expect(msg).to.equal(testMsg)
-        done()
-      })
+  describe('#serialize()', function() {
+    it('should return serialized JSON data', function() {
+      var json = {"test": "test"}
+      var prettyJson = '{\n  "test": "test"\n}'
+      expect(datahelpers.serialize(json)).to.be.equal(prettyJson);
     })
   })
-})
+});

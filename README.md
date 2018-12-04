@@ -11,7 +11,9 @@ npm install
 npm start
 open http://localhost:8080
 ```
-
+```
+npm test to run test suite
+```
 ### Dependencies
 
 * ExpressJS
