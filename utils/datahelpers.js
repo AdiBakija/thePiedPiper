@@ -1,4 +1,6 @@
 'use strict';
+const fs = require('fs');
+
 // Helper function to validate JSON
 const isJson = (data) => {
   try {
@@ -9,7 +11,7 @@ const isJson = (data) => {
   return true;
 };
 
-// Helper function to serialize JSON.
+// Helper function to serialize JSON in pretty print.
 const serialize = (data) => {
   return JSON.stringify(data, null, 2);
 };
@@ -27,17 +29,42 @@ const query = (data, key) => {
 };
 
 const writeToEmptyFile = (data, file) => {
-  let json = []
+  let json = [];
   json.push(data);
-  fs.writeFile(dataFile, dataHelpers.serialize(json), 'utf-8', (err) => {
+  fs.writeFile(file, serialize(json), 'utf-8', (err) => {
     if (err) throw err;
     console.log('Initial entry has been created.');
   });
 };
 
+const writeToFileWithContent = (file, content, data) => {
+  let json = JSON.parse(content);
+  json.push(data);
+  fs.writeFile(file, serialize(json), 'utf-8', (err) => {
+    if (err) throw err;
+    console.log('File has been updated.');
+  });
+};
+
+const writeFile = (data, file) => {
+  let parsedData = JSON.parse(data);
+  // Buffer of existing contents of JSON file.
+  fs.readFile(file, (err, content) => {
+    if (err) throw err;
+    // If contents exist in the file, treat it as an array of objects.
+    // Otherwise, create an empty array and add the data.
+    if (content.length !== 0) {
+      writeToFileWithContent(file, content, parsedData);
+    } else {
+      // If file is empty, create JSON structure as array of objects.
+      writeToEmptyFile(parsedData, file);
+    }
+  });
+};
+
 module.exports = {
   isJson,
-  serialize,
   query,
-  writeToEmptyFile
+  writeFile,
+  serialize,
 };

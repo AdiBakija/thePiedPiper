@@ -8,6 +8,7 @@ var io_server = require('socket.io').listen(8080);
 
 var dataHelpers = require('../utils/datahelpers.js');
 
+// Datahelpers Testing
 describe('datahelpers', function() {
 
   describe('#isJson()', function() {
@@ -26,10 +27,10 @@ describe('datahelpers', function() {
 
   describe('#query()', function() {
     it('should return the correct value from data, given a key', function() {
-      var data = '[{"key1": "value1"}, {"key2": "value2"}]'
-      var key = "key2"
-      expect(dataHelpers.query(data, key)).to.be.equal("value2");
-    })
+      var data = '[{"key1": "value1"}, {"key2": "value2"}]';
+      var key = 'key2';
+      expect(dataHelpers.query(data, key)).to.be.equal('value2');
+    });
   });
 });
 

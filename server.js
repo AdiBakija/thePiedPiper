@@ -32,30 +32,8 @@ io.on('connection', (socket) => {
     // Validate JSON from client.
     let validateJson = dataHelpers.isJson(data);
     if (validateJson) {
-      let parsedData = JSON.parse(data);
       io.to('update').emit('INCOMING_DATA', data);
-
-      // Buffer of existing contents of JSON file.
-      fs.readFile(dataFile, (err, content) => {
-
-        if (err) throw err;
-        // If contents exist in the file, treat it as an array of objects.
-        // Otherwise, create an empty array and add the data.
-        if (content.length !== 0) {
-          let json = JSON.parse(content);
-          json.push(parsedData);
-          // Write JSON data to data file.
-          fs.writeFile(dataFile, dataHelpers.serialize(json), 'utf-8', (err) => {
-            if (err) throw err;
-            console.log('File has been updated.');
-          });
-        } else {
-          // If file is empty, create JSON structure as array of objects.
-          datahelpers.writeToEmptyFile(parsedData, dataFile);
-        }
-
-      });
-
+      dataHelpers.writeFile(data, dataFile);
     } else {
       // Emit the data back if it's not valid JSON for client side handler
       // to log appropriate error message.
@@ -82,6 +60,7 @@ io.on('connection', (socket) => {
       }
 
     });
+
   });
 
   socket.on('disconnect', () => {
