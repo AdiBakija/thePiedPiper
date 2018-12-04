@@ -1,8 +1,9 @@
-var io = require('socket.io-client')
-  , assert = require('assert')
-  , expect = require('expect.js')
-  // , io_server = require('../server.js')
-  , datahelpers = require('../utils/datahelpers.js');
+'use strict';
+/* global describe it */
+var expect = require('expect.js');
+
+
+var datahelpers = require('../utils/datahelpers.js');
 
 describe('datahelpers', function() {
 
@@ -14,9 +15,9 @@ describe('datahelpers', function() {
 
   describe('#serialize()', function() {
     it('should return serialized JSON data', function() {
-      var json = {"test": "test"}
-      var prettyJson = '{\n  "test": "test"\n}'
+      var json = {test: 'test'};
+      var prettyJson = '{\n  "test": "test"\n}';
       expect(datahelpers.serialize(json)).to.be.equal(prettyJson);
-    })
-  })
+    });
+  });
 });

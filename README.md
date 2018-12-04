@@ -13,6 +13,7 @@ open http://localhost:8080
 ```
 ```
 npm test to run test suite
+npm run lint for linting of code
 ```
 ### Dependencies
 
