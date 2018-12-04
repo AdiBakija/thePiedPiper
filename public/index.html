@@ -10,15 +10,19 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io.connect('http://localhost:8080');
+
+    // Notify clients of incoming data updates.
     socket.on('INCOMING_DATA', (data) => {
       const parsedData = JSON.parse(data);
       console.log('Latest updates to JSON: ', parsedData);
     });
 
+    // Notify client  JSON error handler.
     socket.on('JSON_ERROR', (data) => {
       console.log('Please specify correct JSON format');
     });
 
+    // Client side query result handler.
     socket.on('QUERY_RESULT', (data) => {
       if (data === null) {
         console.log('No data was found, please try another query.')
@@ -45,13 +49,14 @@
   <script>
 
     window.onload = () => {
-      //Capture client input and send to socket server.
+      //Capture client JSON payload input and send to socket server.
       document.querySelector("#submit-data").onsubmit = (e) => {
         e.preventDefault();
         const jsonInput = document.querySelector('#data').value;
         socket.emit('UPDATE_DATA', jsonInput);
       };
 
+      // Capture client query input and send key to socket server.
       document.querySelector("#query-data").onsubmit = (e) => {
         e.preventDefault();
         const key = document.querySelector('#key').value;

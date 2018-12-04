@@ -9,11 +9,16 @@ const datahelpers = require('./utils/datahelpers.js');
 
 app.use(express.static('public'));
 
-// Simple client interface for capturing JSON and running queries.
+// Simple client interface route for capturing JSON and running queries.
 app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
 
+/*
+=========
+SOCKET.IO
+=========
+*/
 
 io.on('connection', (socket) => {
   console.log('Client connected.');
@@ -23,7 +28,7 @@ io.on('connection', (socket) => {
   // listening on the update channel with the data and write to JSON file.
   socket.on('UPDATE_DATA', (data) => {
 
-    // Validate if JSON is valid or not
+    // Validate JSON from client.
     let validateJson = datahelpers.isJson(data);
     if (validateJson) {
       let parsedData = JSON.parse(data);
@@ -31,14 +36,15 @@ io.on('connection', (socket) => {
 
       // Buffer of existing contents of JSON file.
       fs.readFile('./data.json', (err, content) => {
+
         if (err) throw err;
         // If contents exist in the file, treat it as an array of objects.
         // Otherwise, create an empty array and add the data.
         if (content.length !== 0) {
-          let buffer = JSON.parse(content);
-          buffer.push(parsedData);
-          // Write JSON data to file buffer.
-          fs.writeFile('./data.json', datahelpers.serialize(buffer), 'utf-8', (err) => {
+          let json = JSON.parse(content);
+          json.push(parsedData);
+          // Write JSON data to data file.
+          fs.writeFile('./data.json', datahelpers.serialize(json), 'utf-8', (err) => {
             if (err) {
               console.error(err);
               return;
@@ -57,22 +63,24 @@ io.on('connection', (socket) => {
             console.log('Initial entry has been created.');
           });
         }
+
       });
 
     } else {
       // Emit the data back if it's not valid JSON for client side handler
-      // To log appropriate error message.
+      // to log appropriate error message.
       console.log('Incorrect JSON format specified.');
       io.to('update').emit('JSON_ERROR', data);
     }
 
   });
 
+  // Query logic based on key provided from client.
   socket.on('QUERY_DATA', (key) => {
     fs.readFile('./data.json', (err, content) => {
 
       if (err) throw err;
-      // If key exist in the file, return it's value as the result.
+      // If key exists in the file, return it's value as the result.
       // Emit the returned result to client side code.
       if (content.length !== 0) {
         let buffer = JSON.parse(content);
@@ -86,6 +94,7 @@ io.on('connection', (socket) => {
       } else {
         console.log('There is no data available.');
       }
+
     });
   });
 

@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "chai-http": "^4.2.0",
     "eslint": "^5.9.0",
     "eslint-config-strongloop": "^2.1.0",
     "expect.js": "^0.3.1",
