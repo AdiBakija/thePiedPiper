@@ -18,12 +18,23 @@
     socket.on('JSON_ERROR', (data) => {
       console.log('Please specify correct JSON format');
     });
+
+    socket.on('QUERY_RESULT', (data) => {
+      console.log(data);
+    });
   </script>
 
   <h1>The Pied Piper</h1>
 
     <form id="submit-data">
+      <label>Data Entry: </label>
       <input id="data" type="text" name="jsondata" />
+      <input type="submit" name="submit" />
+    </form>
+
+    <form id="query-data">
+      <label>Query Data:</label>
+      <input id="key" type="text" name="key" />
       <input type="submit" name="submit" />
     </form>
 
@@ -34,8 +45,15 @@
       document.querySelector("#submit-data").onsubmit = (e) => {
         e.preventDefault();
         const jsonInput = document.querySelector('#data').value;
-        socket.emit('UPDATE_DATA', JSON.stringify(jsonInput));
-      }
+        socket.emit('UPDATE_DATA', jsonInput);
+      };
+
+      document.querySelector("#query-data").onsubmit = (e) => {
+        e.preventDefault();
+        const key = document.querySelector('#key').value;
+        socket.emit('QUERY_DATA', key);
+      };
+
     };
 
   </script>

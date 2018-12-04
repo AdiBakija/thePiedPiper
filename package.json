@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "start": "node server.js"
+    "start": "node server.js",
+    "local": "nodemon --watch server -e js server.js"
   },
   "repository": {
     "type": "git",
@@ -23,13 +24,13 @@
   },
   "homepage": "https://github.com/AdiBakija/thePiedPiper#readme",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.7"
   }
 }
