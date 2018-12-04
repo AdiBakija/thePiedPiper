@@ -24,10 +24,20 @@ const query = (data, key) => {
     }
   });
   return result;
-}
+};
+
+const writeToEmptyFile = (data, file) => {
+  let json = []
+  json.push(data);
+  fs.writeFile(dataFile, dataHelpers.serialize(json), 'utf-8', (err) => {
+    if (err) throw err;
+    console.log('Initial entry has been created.');
+  });
+};
 
 module.exports = {
   isJson,
   serialize,
-  query
+  query,
+  writeToEmptyFile
 };

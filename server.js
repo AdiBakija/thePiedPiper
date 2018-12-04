@@ -51,12 +51,7 @@ io.on('connection', (socket) => {
           });
         } else {
           // If file is empty, create JSON structure as array of objects.
-          let json = [];
-          json.push(parsedData);
-          fs.writeFile(dataFile, dataHelpers.serialize(json), 'utf-8', (err) => {
-            if (err) throw err;
-            console.log('Initial entry has been created.');
-          });
+          datahelpers.writeToEmptyFile(parsedData, dataFile);
         }
 
       });
